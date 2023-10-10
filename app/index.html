@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Test Page</title>
+    <style type="text/css">
+      * {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+
+    <script
+      type="text/javascript"
+      src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"
+    ></script>
+
+    <script type="text/javascript">
+      $(function () {
+        $("body").append("<p>js on load</p>");
+      });
+      setTimeout(() => {
+        $("body").append("<p>js with timeout</p>");
+      }, 500);
+    </script>
+  </head>
+
+  <body>
+    <p class="njs">no js</p>
+  </body>
+</html>
