@@ -7,6 +7,7 @@ require (
 	github.com/chromedp/cdproto v0.0.0-20230802225258-3cf4e6d46a89
 	github.com/chromedp/chromedp v0.9.2
 	github.com/patrickmn/go-cache v2.1.0+incompatible
+	github.com/samber/lo v1.38.1
 	go.uber.org/zap v1.25.0
 )
 

@@ -18,6 +18,7 @@ import (
 	"github.com/chromedp/chromedp"
 	"github.com/chromedp/chromedp/device"
 	"github.com/patrickmn/go-cache"
+	"github.com/samber/lo"
 	"go.uber.org/zap"
 )
 
@@ -78,8 +79,12 @@ func (m *Prerender) InitChromeCtx(ctx context.Context) {
 		chromedp.WithErrorf(func(s string, _ ...interface{}) {
 			m.logger.Error(s)
 		}),
-		chromedp.WithDebugf(func(s string, _ ...interface{}) {
-			m.logger.Debug(s)
+		chromedp.WithDebugf(func(s string, data ...interface{}) {
+			fields := lo.Map(data, func(item interface{}, index int) zap.Field {
+				return zap.Any(fmt.Sprintf("p%d", index), item)
+			})
+
+			m.logger.Debug(s, fields...)
 		}),
 		chromedp.WithLogf(func(s string, _ ...interface{}) {
 			m.logger.Info(s)
@@ -147,6 +152,7 @@ func (m Prerender) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyh
 
 	// TODO: move worker pool
 	m.logger.Debug("render as PSR: " + d.UserAgent)
+	m.logger.Debug("URL: " + r.URL.String())
 	var page string
 	err := chromedp.Run(m.chromeCtx,
 		chromedp.Emulate(d),
