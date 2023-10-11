@@ -3,11 +3,13 @@
 	http_port 8080
 	admin off
     order crawler_prerender before file_server
+    debug
 }
 
-localhost:8080 {
+:8080 {
 	root * ./app
     crawler_prerender 101 301
+    encode zstd gzip
 	file_server
 	try_files {path} /index.html?{query}
 }

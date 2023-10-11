@@ -158,12 +158,12 @@ func (m Prerender) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyh
 
 	// TODO: move worker pool
 	m.logger.Debug("render as PSR: " + d.UserAgent)
-	m.logger.Debug("URL: " + r.URL.String())
+
 	var page string
 	err := chromedp.Run(m.chromeCtx,
 		chromedp.Emulate(d),
 		emulation.SetUserAgentOverride(d.UserAgent+" PSR/1"),
-		chromedp.Navigate(r.URL.String()),
+		chromedp.Navigate(r.URL.String()), //TODO: no original host
 		chromedp.ActionFunc(func(_ context.Context) error {
 			if m.config.AfterLoadDelay > 0 {
 				time.Sleep(time.Duration(m.config.AfterLoadDelay) * time.Millisecond)
@@ -173,7 +173,6 @@ func (m Prerender) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyh
 		}),
 		chromedp.OuterHTML("html", &page),
 	)
-
 	if err != nil {
 		if errors.Is(err, context.Canceled) {
 			m.logger.Error("context canceled")
